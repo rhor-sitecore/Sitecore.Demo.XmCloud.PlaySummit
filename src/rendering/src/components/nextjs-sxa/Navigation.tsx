@@ -157,6 +157,8 @@ const getLinkTitle = (props: NavigationProps): string | undefined => {
 
 // DEMO TEAM CUSTOMIZATION - New variant
 export const LandingPagesNavigation = (props: NavigationProps): JSX.Element => {
+  const { sitecoreContext } = useSitecoreContext();
+
   if (!Object.values(props.fields).length) {
     return (
       <div className={`component navigation`}>
@@ -165,10 +167,21 @@ export const LandingPagesNavigation = (props: NavigationProps): JSX.Element => {
     );
   }
 
+  const handleClick = (event?: React.MouseEvent<HTMLElement>): void => {
+    if (event && sitecoreContext?.pageEditing) {
+      event.preventDefault();
+    }
+  };
+
   const list = Object.values(props.fields)
     .filter((element) => element)
     .map((element: Fields, key: number) => (
-      <NavigationList key={`${key}${element.Id}`} fields={element} relativeLevel={1} />
+      <NavigationList
+        key={`${key}${element.Id}`}
+        fields={element}
+        handleClick={(event: React.MouseEvent<HTMLElement>) => handleClick(event)}
+        relativeLevel={1}
+      />
     ));
   const styles =
     props.params != null ? `${props.params.GridParameters} ${props.params.Styles}` : null;
