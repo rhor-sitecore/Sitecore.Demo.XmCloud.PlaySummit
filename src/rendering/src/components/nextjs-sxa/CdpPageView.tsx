@@ -19,27 +19,35 @@ const CdpPageView = (): JSX.Element => {
     sitecoreContext: { pageState, route, variantId },
   } = useSitecoreContext();
 
+  // DEMO TEAM CUSTOMIZATION - Check whether the environment variablea are set
+  const isCdpConfigured =
+    !!process.env.NEXT_PUBLIC_CDP_CLIENT_KEY && !!process.env.NEXT_PUBLIC_CDP_TARGET_URL;
+
   /**
    * Creates a page view event using the Sitecore Engage SDK.
    */
   const createPageView = async (page: string, language: string, pageVariantId: string) => {
-    const pointOfSale = PosResolver.resolve(language);
-    const engage = await init({
-      clientKey: process.env.NEXT_PUBLIC_CDP_CLIENT_KEY || '',
-      targetURL: process.env.NEXT_PUBLIC_CDP_TARGET_URL || '',
-      // Replace with the top level cookie domain of the website that is being integrated e.g ".example.com" and not "www.example.com"
-      cookieDomain: window.location.host.replace(/^www\./, ''),
-      // Cookie may be created in personalize middleware (server), but if not we should create it here
-      forceServerCookieMode: false,
-    });
-    engage.pageView({
-      channel: 'WEB',
-      currency: 'USD',
-      pos: pointOfSale,
-      page,
-      pageVariantId,
-      language,
-    });
+    // DMEO TEAM CUSTOMIZATION - Only initialize if the environment variables are set
+    if (isCdpConfigured) {
+      const pointOfSale = PosResolver.resolve(language);
+      const engage = await init({
+        clientKey: process.env.NEXT_PUBLIC_CDP_CLIENT_KEY || '',
+        targetURL: process.env.NEXT_PUBLIC_CDP_TARGET_URL || '',
+        // Replace with the top level cookie domain of the website that is being integrated e.g ".example.com" and not "www.example.com"
+        cookieDomain: window.location.host.replace(/^www\./, ''),
+        // Cookie may be created in personalize middleware (server), but if not we should create it here
+        forceServerCookieMode: false,
+      });
+      engage.pageView({
+        channel: 'WEB',
+        currency: 'USD',
+        pos: pointOfSale,
+        page,
+        pageVariantId,
+        language,
+      });
+    }
+    // END CUSTOMIZATION
   };
 
   /**
@@ -49,7 +57,8 @@ const CdpPageView = (): JSX.Element => {
    * By default it is always enabled.
    */
   const disabled = () => {
-    return false;
+    // DEMO TEAM CUSTOMIZATION - Disable if the environment variables are not set
+    return !isCdpConfigured;
   };
 
   useEffect(() => {
