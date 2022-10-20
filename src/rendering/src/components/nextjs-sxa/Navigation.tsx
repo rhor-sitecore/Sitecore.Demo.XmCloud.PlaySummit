@@ -21,7 +21,7 @@ interface Fields {
 type NavigationProps = {
   params?: { [key: string]: string };
   fields: Fields;
-  handleClick?: (event?: React.MouseEvent<HTMLElement>) => void;
+  handleClick: (event?: React.MouseEvent<HTMLElement>) => void;
   relativeLevel: number;
 };
 
@@ -50,10 +50,15 @@ const getLinkField = (props: NavigationProps): LinkField => ({
 export const Default = (props: NavigationProps): JSX.Element => {
   const [isOpenMenu, openMenu] = useState(false);
   const { sitecoreContext } = useSitecoreContext();
+  const styles =
+    props.params != null
+      ? `${props.params.GridParameters ?? ''} ${props.params.Styles ?? ''}`.trimEnd()
+      : '';
+  const id = props.params != null ? props.params.RenderingIdentifier : null;
 
   if (!Object.values(props.fields).length) {
     return (
-      <div className={`component navigation`}>
+      <div className={`component navigation ${styles}`} id={id ? id : undefined}>
         <div className="component-content">[Navigation]</div>
       </div>
     );
@@ -81,11 +86,9 @@ export const Default = (props: NavigationProps): JSX.Element => {
         relativeLevel={1}
       />
     ));
-  const styles =
-    props.params != null ? `${props.params.GridParameters} ${props.params.Styles}` : null;
 
   return (
-    <div className={`component navigation ${styles}`}>
+    <div className={`component navigation ${styles}`} id={id ? id : undefined}>
       <label className="menu-mobile-navigate-wrapper">
         <input
           type="checkbox"
@@ -152,6 +155,7 @@ const getLinkTitle = (props: NavigationProps): string | undefined => {
   return title;
 };
 
+// DEMO TEAM CUSTOMIZATION - New variant
 export const LandingPagesNavigation = (props: NavigationProps): JSX.Element => {
   if (!Object.values(props.fields).length) {
     return (
@@ -179,3 +183,4 @@ export const LandingPagesNavigation = (props: NavigationProps): JSX.Element => {
     </div>
   );
 };
+// END CUSTOMIZATION
