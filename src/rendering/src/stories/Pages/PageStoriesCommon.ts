@@ -1,7 +1,7 @@
-import { HeaderProps } from '../../components/Navigation/Header';
+import { HeaderContentProps } from '../../components/Navigation/HeaderContent';
 import { FooterProps } from '../../components/Navigation/Footer';
-import HeroSectionCta from '../../components/PageContent/HeroSectionCta';
-import MainNavigation from '../../components/Navigation/MainNavigation';
+import { Default as HeroSectionCta } from '../../components/PageContent/HeroSectionCta';
+import { Default as MainNavigation } from '../../components/Navigation/MainNavigation';
 
 export const mockMainNavigationFields = {
   data: {
@@ -138,6 +138,17 @@ export const mockHeaderProps = {
       },
     },
   },
+  sitecoreContext: {
+    Languages: [
+      {
+        Name: 'en',
+      },
+      {
+        Name: 'fr-CA',
+      },
+    ],
+    language: 'en',
+  },
   rendering: {
     placeholders: {
       'jss-header-content': [
@@ -152,7 +163,7 @@ export const mockHeaderProps = {
     },
     dataSource: '/sitecore',
   },
-} as unknown as HeaderProps;
+} as unknown as HeaderContentProps;
 
 export const mockFooterProps = {
   fields: {
